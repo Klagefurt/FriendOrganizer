@@ -16,6 +16,8 @@ namespace FriendOrganizer.UI.Startup
 
             builder.RegisterType<FriendDataService>().As<IFriendDataService>();
 
+            //builder.RegisterType<FriendOrganizerDbContext>().AsSelf();
+
             builder.Register(context =>
             {
                 var factory = new FriendOrganizerDbContextFactory();

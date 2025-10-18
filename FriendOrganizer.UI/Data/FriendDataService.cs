@@ -6,18 +6,29 @@ namespace FriendOrganizer.UI.Data
 {
     public class FriendDataService : IFriendDataService
     {
-        private readonly FriendOrganizerDbContext _context;
+        private Func<FriendOrganizerDbContext> _contextCreator;
 
-        public FriendDataService(FriendOrganizerDbContext dbContext)
+        public FriendDataService(Func<FriendOrganizerDbContext> contextCreator)
         {
-            _context = dbContext;
+            _contextCreator = contextCreator;
         }
 
+        //private readonly FriendOrganizerDbContext _context;
 
-        public IEnumerable<Friend> GetAll()
+        //public FriendDataService(FriendOrganizerDbContext dbContext)
+        //{
+        //    _context = dbContext;
+        //}
+
+
+        public async Task<List<Friend>> GetAllAsync()
         {
+            await using var ctx = _contextCreator();
+
+            return await ctx.Friends.AsNoTracking().ToListAsync();
+
             // TODO: Load data from real database
-            return _context.Friends.AsNoTracking().ToList();
+            //return _context.Friends.AsNoTracking().ToList();
 
             //yield return new Friend { FirstName = "Thomas", LastName = "Miner" };
             //yield return new Friend { FirstName = "Heiner", LastName = "Muellerr" };
