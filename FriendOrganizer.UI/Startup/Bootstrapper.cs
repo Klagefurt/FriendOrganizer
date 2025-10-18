@@ -1,11 +1,6 @@
 ﻿using Autofac;
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.Startup
 {
