@@ -1,6 +1,7 @@
 ﻿using FriendOrganizer.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
 using System.Runtime.InteropServices;
 
@@ -17,6 +18,59 @@ namespace FriendOrganizer.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Friend>().HasData(
+                new Friend
+                {
+                    Id = 1,
+                    FirstName = "Thomas",
+                    LastName = "Miner",
+                    Email = "thomas@example.com"
+                },
+                new Friend
+                {
+                    Id = 2,
+                    FirstName = "Hans",
+                    LastName = "Kolbe",
+                    Email = "hans@example.com"
+                },
+                new Friend
+                {
+                    Id = 3,
+                    FirstName = "Misha",
+                    LastName = "Walter",
+                    Email = "walter@gmail.com"
+                },
+                new Friend
+                {
+                    Id = 4,
+                    FirstName = "Heiner",
+                    LastName = "Mueller",
+                    Email = "mueller@gmail.com"
+                }
+            );
+
+            //modelBuilder.Entity<Friend>()
+            //    .Property(f => f.FirstName)
+            //    .IsRequired()
+            //    .HasMaxLength(50);
+
+            // modelBuilder.ApplyConfiguration(new FriendConfiguration());
+        }
+    }
+
+    public class FriendConfiguration : IEntityTypeConfiguration<Friend>
+    {
+        public void Configure(EntityTypeBuilder<Friend> builder)
+        {
+            builder.Property(f => f.FirstName)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.HasData(
+                new Friend { Id = 1, FirstName = "Thomas", LastName = "Miner", Email = "thomas@example.com" },
+                new Friend { Id = 2, FirstName = "Hans", LastName = "Kolbe", Email = "hans@example.com" } 
+            );
         }
     }
 
