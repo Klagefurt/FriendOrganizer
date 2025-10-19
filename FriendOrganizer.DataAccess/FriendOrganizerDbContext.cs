@@ -11,7 +11,7 @@ namespace FriendOrganizer.DataAccess
     {
         public FriendOrganizerDbContext(DbContextOptions<FriendOrganizerDbContext> options) : base(options)
         {
-            
+
         }
         public DbSet<Friend> Friends { get; set; }
 
@@ -47,6 +47,13 @@ namespace FriendOrganizer.DataAccess
                     FirstName = "Heiner",
                     LastName = "Mueller",
                     Email = "mueller@gmail.com"
+                },
+                new Friend
+                {
+                    Id = 5,
+                    FirstName = "Franz",
+                    LastName = "Kafka",
+                    Email = "kafka@gmail.com"
                 }
             );
 
@@ -78,17 +85,38 @@ namespace FriendOrganizer.DataAccess
     {
         public FriendOrganizerDbContext CreateDbContext(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
+
+            return new FriendOrganizerDbContext(DbContextFactoryHelper.BuildOptions());
+
+            //var configuration = new ConfigurationBuilder()
+            //    .SetBasePath(AppContext.BaseDirectory)
+            //    .AddJsonFile("appsettings.json", optional: false)
+            //    .Build();
+
+            //var connectionString = configuration.GetConnectionString("FriendOrganizerDB");
+
+            //var optionsBuilder = new DbContextOptionsBuilder<FriendOrganizerDbContext>();
+            //optionsBuilder.UseSqlServer(connectionString);
+
+            //return new FriendOrganizerDbContext(optionsBuilder.Options);
+        }
+    }
+
+    public static class DbContextFactoryHelper
+    {
+        public static DbContextOptions<FriendOrganizerDbContext> BuildOptions()
+        {
+            var config = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            var connectionString = configuration.GetConnectionString("FriendOrganizerDB");
+            var cs = config.GetConnectionString("FriendOrganizerDb");
 
-            var optionsBuilder = new DbContextOptionsBuilder<FriendOrganizerDbContext>();
-            optionsBuilder.UseSqlServer(connectionString);
-
-            return new FriendOrganizerDbContext(optionsBuilder.Options);
+            return new DbContextOptionsBuilder<FriendOrganizerDbContext>()
+                .UseSqlServer(cs)
+                .Options;
         }
     }
+
 }

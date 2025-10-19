@@ -3,6 +3,7 @@ using FriendOrganizer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FriendOrganizer.DataAccess.Migrations
 {
     [DbContext(typeof(FriendOrganizerDbContext))]
-    partial class FriendOrganizerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251019200401_Migration_3_2")]
+    partial class Migration_3_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
