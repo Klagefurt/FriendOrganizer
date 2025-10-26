@@ -2,10 +2,6 @@
 using FriendOrganizer.DataAccess;
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Client;
 
 namespace FriendOrganizer.UI.Startup
 {
@@ -15,10 +11,17 @@ namespace FriendOrganizer.UI.Startup
         {
             var builder = new ContainerBuilder();
 
+            // Prism EventAggregator for communication between vms
+            builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
+
             // UI
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
+            builder.RegisterType<FriendDetailViewModel>().As<IFriendDetailViewModel>();
+            
             // Data Service
+            builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
             builder.RegisterType<FriendDataService>().As<IFriendDataService>();
 
             // 1. Factory registration --- REUSING FACTORY, AVOIDING DUPLICATION
@@ -28,14 +31,14 @@ namespace FriendOrganizer.UI.Startup
             //    return factory.CreateDbContext([]);
             //})
             //.As<FriendOrganizerDbContext>()
-            //.InstancePerLifetimeScope();
+            //.InstancePerDependency();
 
             //return builder.Build();
 
             // 2. Extracting a shared helper
             builder.Register(_ => new FriendOrganizerDbContext(DbContextFactoryHelper.BuildOptions()))
                 .As<FriendOrganizerDbContext>()
-                .InstancePerLifetimeScope();
+                .InstancePerDependency();
 
             return builder.Build();
 
