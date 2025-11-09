@@ -58,9 +58,16 @@ namespace FriendOrganizer.DataAccess
                 new Friend
                 {
                     Id = 6,
-                    FirstName = "Valentin",
+                    FirstName = "Simon",
                     LastName = "Trifonov",
-                    Email = "trifonov@gmail.com"
+                    Email = "simon_trifonov@gmail.com"
+                },
+                new Friend
+                {
+                    Id = 7,
+                    FirstName = "Miles",
+                    LastName = "Davis",
+                    Email = "davis@yandex.ru"
                 }
             );
 
