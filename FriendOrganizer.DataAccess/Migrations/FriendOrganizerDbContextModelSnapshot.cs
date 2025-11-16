@@ -46,7 +46,7 @@ namespace FriendOrganizer.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Friends");
+                    b.ToTable("Friends", (string)null);
 
                     b.HasData(
                         new

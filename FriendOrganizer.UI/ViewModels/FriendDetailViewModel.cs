@@ -1,6 +1,7 @@
 ﻿using FriendOrganizer.Model;
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Events;
+using FriendOrganizer.UI.Wrapper;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -10,17 +11,7 @@ namespace FriendOrganizer.UI.ViewModels
     {
         private IFriendDataService _friendDataService;
         private IEventAggregator _eventAggregator;
-
-        private Friend _friend;
-        public Friend Friend
-        {
-            get { return _friend; }
-            private set
-            {
-                _friend = value;
-                OnPropertyChanged();
-            }
-        }
+        private FriendWrapper _friend;
 
         public FriendDetailViewModel(IFriendDataService friendDataService, IEventAggregator eventAggregator)
         {
@@ -33,9 +24,27 @@ namespace FriendOrganizer.UI.ViewModels
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
+        public async Task LoadAsync(int friendId)
+        {
+            var friend = await _friendDataService.GetByIdAsync(friendId);
+            Friend = new FriendWrapper(friend);
+        }
+
+        public FriendWrapper Friend
+        {
+            get { return _friend; }
+            private set
+            {
+                _friend = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public ICommand SaveCommand { get; }
+
         private async void OnSaveExecute()
         {
-            await _friendDataService.SaveAsync(Friend);
+            await _friendDataService.SaveAsync(Friend.Model);
             _eventAggregator.GetEvent<AfterFriendSavedEvent>()
                 .Publish(new AfterFriendSavedEventArgs
             {
@@ -54,12 +63,5 @@ namespace FriendOrganizer.UI.ViewModels
         {
             await LoadAsync(friendId);
         }
-
-        public async Task LoadAsync(int friendId)
-        {
-            Friend = await _friendDataService.GetByIdAsync(friendId);
-        }
-
-        public ICommand SaveCommand { get; }
     }
 }
