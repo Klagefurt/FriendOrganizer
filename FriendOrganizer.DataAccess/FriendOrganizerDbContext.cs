@@ -68,6 +68,13 @@ namespace FriendOrganizer.DataAccess
                     FirstName = "Miles",
                     LastName = "Davis",
                     Email = "davis@yandex.ru"
+                },
+                new Friend 
+                {
+                    Id = 8,
+                    FirstName = "Viktor",
+                    LastName = "Hugh Smith",
+                    Email = "hugh@hugh.ru"
                 }
             );
 

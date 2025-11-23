@@ -3,6 +3,7 @@ using FriendOrganizer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FriendOrganizer.DataAccess.Migrations
 {
     [DbContext(typeof(FriendOrganizerDbContext))]
-    partial class FriendOrganizerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251123202043_Migration_4_1")]
+    partial class Migration_4_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,13 +100,6 @@ namespace FriendOrganizer.DataAccess.Migrations
                             Email = "davis@yandex.ru",
                             FirstName = "Miles",
                             LastName = "Davis"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Email = "hugh@hugh.ru",
-                            FirstName = "Viktor",
-                            LastName = "Hugh Smith"
                         });
                 });
 #pragma warning restore 612, 618

@@ -1,8 +1,6 @@
-﻿using FriendOrganizer.Model;
-using FriendOrganizer.UI.Data;
+﻿using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Events;
 using FriendOrganizer.UI.Wrapper;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace FriendOrganizer.UI.ViewModels
@@ -28,6 +26,14 @@ namespace FriendOrganizer.UI.ViewModels
         {
             var friend = await _friendDataService.GetByIdAsync(friendId);
             Friend = new FriendWrapper(friend);
+
+            Friend.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(Friend.HasErrors))
+                {
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            };
         }
 
         public FriendWrapper Friend
@@ -39,7 +45,7 @@ namespace FriendOrganizer.UI.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         public ICommand SaveCommand { get; }
 
         private async void OnSaveExecute()
@@ -47,16 +53,16 @@ namespace FriendOrganizer.UI.ViewModels
             await _friendDataService.SaveAsync(Friend.Model);
             _eventAggregator.GetEvent<AfterFriendSavedEvent>()
                 .Publish(new AfterFriendSavedEventArgs
-            {
-                Id = Friend.Id,
-                DisplayMemeber = $"{Friend.FirstName} {Friend.LastName}"
-            });
+                {
+                    Id = Friend.Id,
+                    DisplayMemeber = $"{Friend.FirstName} {Friend.LastName}"
+                });
         }
 
         private bool OnSaveCanExecute()
         {
-            // TODO: correct this!
-            return true;
+            // TODO: change if friend has changes
+            return Friend != null && !Friend.HasErrors;
         }
 
         private async void OnOpenFriendDetailView(int friendId)
