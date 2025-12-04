@@ -21,25 +21,15 @@ namespace FriendOrganizer.UI.Wrapper
             set => SetValue(value);
         }
 
-
-
-        //private void ValidateProperty(string propertyName)
-        //{
-        //    ClearErrors(propertyName);
-        //    
-        //}
-
         public string LastName
         {
-            get 
+            get
             {
                 //return Model.LastName;
                 return GetValue<string>();
             }
-            set
-            {
-                SetValue(value);
-            }
+
+            set => SetValue(value);
         }
 
         public string Email
@@ -67,5 +57,5 @@ namespace FriendOrganizer.UI.Wrapper
                     break;
             }
         }
-        }
+    }
 }

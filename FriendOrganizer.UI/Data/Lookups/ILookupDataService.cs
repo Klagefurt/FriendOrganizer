@@ -1,6 +1,6 @@
 ﻿using FriendOrganizer.Model;
 
-namespace FriendOrganizer.UI.Data
+namespace FriendOrganizer.UI.Data.Lookups
 {
     public interface ILookupDataService
     {

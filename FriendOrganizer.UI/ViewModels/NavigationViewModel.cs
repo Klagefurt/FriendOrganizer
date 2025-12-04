@@ -1,5 +1,6 @@
 ﻿using FriendOrganizer.Model;
 using FriendOrganizer.UI.Data;
+using FriendOrganizer.UI.Data.Lookups;
 using FriendOrganizer.UI.Events;
 using System.Collections.ObjectModel;
 

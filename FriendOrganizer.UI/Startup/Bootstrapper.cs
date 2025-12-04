@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using FriendOrganizer.DataAccess;
 using FriendOrganizer.UI.Data;
+using FriendOrganizer.UI.Data.Lookups;
+using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.ViewModels;
 
 namespace FriendOrganizer.UI.Startup
@@ -22,7 +24,7 @@ namespace FriendOrganizer.UI.Startup
             
             // Data Service
             builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
-            builder.RegisterType<FriendDataService>().As<IFriendDataService>();
+            builder.RegisterType<FriendRepository>().As<IFriendRepository>();
 
             // 1. Factory registration --- REUSING FACTORY, AVOIDING DUPLICATION
             //builder.Register(_ =>

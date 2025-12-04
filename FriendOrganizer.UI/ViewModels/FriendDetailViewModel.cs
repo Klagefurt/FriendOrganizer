@@ -1,4 +1,5 @@
 ﻿using FriendOrganizer.UI.Data;
+using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Events;
 using FriendOrganizer.UI.Wrapper;
 using System.Windows.Input;
@@ -7,24 +8,22 @@ namespace FriendOrganizer.UI.ViewModels
 {
     public class FriendDetailViewModel : ViewModelBase, IFriendDetailViewModel
     {
-        private IFriendDataService _friendDataService;
+        private IFriendRepository _friendRepository;
         private IEventAggregator _eventAggregator;
         private FriendWrapper _friend;
 
-        public FriendDetailViewModel(IFriendDataService friendDataService, IEventAggregator eventAggregator)
+        public FriendDetailViewModel(IFriendRepository friendRepository, IEventAggregator eventAggregator)
         {
-            _friendDataService = friendDataService;
+            _friendRepository = friendRepository;
             _eventAggregator = eventAggregator;
-
-            _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
-                .Subscribe(OnOpenFriendDetailView);
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
         public async Task LoadAsync(int friendId)
         {
-            var friend = await _friendDataService.GetByIdAsync(friendId);
+            var friend = await _friendRepository.GetByIdAsync(friendId);
+
             Friend = new FriendWrapper(friend);
 
             Friend.PropertyChanged += (s, e) =>
@@ -34,6 +33,7 @@ namespace FriendOrganizer.UI.ViewModels
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
             };
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         public FriendWrapper Friend
@@ -50,7 +50,8 @@ namespace FriendOrganizer.UI.ViewModels
 
         private async void OnSaveExecute()
         {
-            await _friendDataService.SaveAsync(Friend.Model);
+            await _friendRepository.SaveAsync();
+
             _eventAggregator.GetEvent<AfterFriendSavedEvent>()
                 .Publish(new AfterFriendSavedEventArgs
                 {
@@ -65,9 +66,6 @@ namespace FriendOrganizer.UI.ViewModels
             return Friend != null && !Friend.HasErrors;
         }
 
-        private async void OnOpenFriendDetailView(int friendId)
-        {
-            await LoadAsync(friendId);
-        }
+        
     }
 }

@@ -2,7 +2,7 @@
 using FriendOrganizer.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace FriendOrganizer.UI.Data
+namespace FriendOrganizer.UI.Data.Lookups
 {
     public class LookupDataService : ILookupDataService
     {

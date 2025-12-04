@@ -3,16 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
-using System.Runtime.InteropServices;
 
 namespace FriendOrganizer.DataAccess
 {
     public class FriendOrganizerDbContext : DbContext
     {
         public FriendOrganizerDbContext(DbContextOptions<FriendOrganizerDbContext> options) : base(options)
-        {
+        {}
 
-        }
         public DbSet<Friend> Friends { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,13 +75,6 @@ namespace FriendOrganizer.DataAccess
                     Email = "hugh@hugh.ru"
                 }
             );
-
-            //modelBuilder.Entity<Friend>()
-            //    .Property(f => f.FirstName)
-            //    .IsRequired()
-            //    .HasMaxLength(50);
-
-            // modelBuilder.ApplyConfiguration(new FriendConfiguration());
         }
     }
 
@@ -106,20 +97,7 @@ namespace FriendOrganizer.DataAccess
     {
         public FriendOrganizerDbContext CreateDbContext(string[] args)
         {
-
             return new FriendOrganizerDbContext(DbContextFactoryHelper.BuildOptions());
-
-            //var configuration = new ConfigurationBuilder()
-            //    .SetBasePath(AppContext.BaseDirectory)
-            //    .AddJsonFile("appsettings.json", optional: false)
-            //    .Build();
-
-            //var connectionString = configuration.GetConnectionString("FriendOrganizerDB");
-
-            //var optionsBuilder = new DbContextOptionsBuilder<FriendOrganizerDbContext>();
-            //optionsBuilder.UseSqlServer(connectionString);
-
-            //return new FriendOrganizerDbContext(optionsBuilder.Options);
         }
     }
 
