@@ -4,6 +4,7 @@ using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Data.Lookups;
 using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.ViewModels;
+using FriendOrganizer.UI.Views.Services;
 
 namespace FriendOrganizer.UI.Startup
 {
@@ -19,6 +20,8 @@ namespace FriendOrganizer.UI.Startup
             // UI
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<MessageDialogService>().As<IMessageDialogService>();
+
             builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
             builder.RegisterType<FriendDetailViewModel>().As<IFriendDetailViewModel>();
             

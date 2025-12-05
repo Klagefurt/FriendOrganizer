@@ -11,6 +11,7 @@ namespace FriendOrganizer.UI.ViewModels
         private IFriendRepository _friendRepository;
         private IEventAggregator _eventAggregator;
         private FriendWrapper _friend;
+        private bool _hasChanges;
 
         public FriendDetailViewModel(IFriendRepository friendRepository, IEventAggregator eventAggregator)
         {
@@ -18,6 +19,20 @@ namespace FriendOrganizer.UI.ViewModels
             _eventAggregator = eventAggregator;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+        }
+
+        public bool HasChanges
+        {
+            get { return _hasChanges; }
+            set 
+            {
+                if (_hasChanges != value)
+                {
+                    _hasChanges = value;
+                    OnPropertyChanged();
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            }
         }
 
         public async Task LoadAsync(int friendId)
@@ -28,6 +43,10 @@ namespace FriendOrganizer.UI.ViewModels
 
             Friend.PropertyChanged += (s, e) =>
             {
+                if (!HasChanges)
+                {
+                    HasChanges = _friendRepository.HasChanges();
+                }
                 if (e.PropertyName == nameof(Friend.HasErrors))
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
@@ -52,6 +71,7 @@ namespace FriendOrganizer.UI.ViewModels
         {
             await _friendRepository.SaveAsync();
 
+            HasChanges = _friendRepository.HasChanges();
             _eventAggregator.GetEvent<AfterFriendSavedEvent>()
                 .Publish(new AfterFriendSavedEventArgs
                 {
@@ -62,10 +82,8 @@ namespace FriendOrganizer.UI.ViewModels
 
         private bool OnSaveCanExecute()
         {
-            // TODO: change if friend has changes
-            return Friend != null && !Friend.HasErrors;
+            return Friend != null && !Friend.HasErrors && this.HasChanges;
         }
 
-        
     }
 }
