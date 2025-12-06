@@ -1,4 +1,5 @@
-﻿using FriendOrganizer.UI.Data;
+﻿using FriendOrganizer.Model;
+using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Events;
 using FriendOrganizer.UI.Wrapper;
@@ -35,9 +36,12 @@ namespace FriendOrganizer.UI.ViewModels
             }
         }
 
-        public async Task LoadAsync(int friendId)
+        public async Task LoadAsync(int? friendId)
         {
-            var friend = await _friendRepository.GetByIdAsync(friendId);
+            var friend = friendId.HasValue
+                ? await _friendRepository.GetByIdAsync(friendId.Value)
+                : CreateNewFriend()
+                ;
 
             Friend = new FriendWrapper(friend);
 
@@ -85,5 +89,11 @@ namespace FriendOrganizer.UI.ViewModels
             return Friend != null && !Friend.HasErrors && this.HasChanges;
         }
 
+        private Friend CreateNewFriend()
+        {
+            var friend = new Friend();
+            _friendRepository.Add(friend);
+            return friend;
+        }
     }
 }

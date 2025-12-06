@@ -11,10 +11,10 @@ namespace FriendOrganizer.Model
         public string FirstName { get; set; }
 
         [StringLength(50)]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         [StringLength(75)]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 }
