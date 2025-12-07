@@ -2,24 +2,30 @@
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Events;
+using FriendOrganizer.UI.Views.Services;
 using FriendOrganizer.UI.Wrapper;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace FriendOrganizer.UI.ViewModels
 {
     public class FriendDetailViewModel : ViewModelBase, IFriendDetailViewModel
     {
+        private IMessageDialogService _messageDialogService;
         private IFriendRepository _friendRepository;
         private IEventAggregator _eventAggregator;
         private FriendWrapper _friend;
         private bool _hasChanges;
 
-        public FriendDetailViewModel(IFriendRepository friendRepository, IEventAggregator eventAggregator)
+        public FriendDetailViewModel(IFriendRepository friendRepository, IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService )
         {
+            _messageDialogService = messageDialogService;
             _friendRepository = friendRepository;
             _eventAggregator = eventAggregator;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+            DeleteCommand = new DelegateCommand(OnDeleteExecute);
         }
 
         public bool HasChanges
@@ -57,6 +63,12 @@ namespace FriendOrganizer.UI.ViewModels
                 }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            
+            if (Friend.Id == 0)
+            {
+                // It triggers the validation
+                Friend.FirstName = "";
+            }
         }
 
         public FriendWrapper Friend
@@ -71,6 +83,8 @@ namespace FriendOrganizer.UI.ViewModels
 
         public ICommand SaveCommand { get; }
 
+        public ICommand DeleteCommand { get; }
+
         private async void OnSaveExecute()
         {
             await _friendRepository.SaveAsync();
@@ -82,6 +96,17 @@ namespace FriendOrganizer.UI.ViewModels
                     Id = Friend.Id,
                     DisplayMemeber = $"{Friend.FirstName} {Friend.LastName}"
                 });
+        }
+        
+        private async void OnDeleteExecute()
+        {
+            var result = _messageDialogService.ShowOkCancelDialog($"Do you really want to delete {Friend.FirstName}?", "Quesrion");
+            if (result == MessageDialogResult.OK)
+            {
+                _friendRepository.Remove(Friend.Model);
+                await _friendRepository.SaveAsync();
+                _eventAggregator.GetEvent<AfterFriendDeletedEvent>().Publish(Friend.Id);
+            }
         }
 
         private bool OnSaveCanExecute()
